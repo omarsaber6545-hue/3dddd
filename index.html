@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>St. Jude Memorial Hospital - 3D Abandoned Horror Environment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+  <!-- 3D Viewport Canvas -->
+  <div id="canvas-container"></div>
+
+  <!-- Horror Post-Processing Vignette & Grain Overlay -->
+  <div id="horror-overlay"></div>
+
+  <!-- Game HUD -->
+  <div id="hud" class="hidden">
+    <!-- Crosshair -->
+    <div id="crosshair">
+      <div class="dot"></div>
+      <div class="reticle"></div>
+    </div>
+
+    <!-- Interaction Prompt -->
+    <div id="interaction-prompt" class="hidden">
+      <span class="key-badge">E</span>
+      <span id="interaction-text">INTERACT</span>
+    </div>
+
+    <!-- Subtitles / Story Dialogue / Examination notes -->
+    <div id="story-subtitles" class="hidden">
+      <div id="subtitles-text"></div>
+    </div>
+
+    <!-- Top Left: Hospital Wing & Floor Status -->
+    <div id="location-panel">
+      <div class="facility-name">ST. JUDE MEMORIAL HOSPITAL</div>
+      <div id="floor-display" class="floor-badge">GROUND FLOOR: RECEPTION & ER</div>
+      <div id="room-display" class="sub-location">MAIN CORRIDOR WING A</div>
+    </div>
+
+    <!-- Top Right: Vital stats & audio status -->
+    <div id="stats-panel">
+      <div class="stat-item">
+        <span class="label">PULSE:</span>
+        <span id="heart-rate" class="val text-pulse">78 BPM</span>
+      </div>
+      <div class="stat-item">
+        <span class="label">POWER GRID:</span>
+        <span id="power-status" class="val text-offline">OFFLINE (AUX)</span>
+      </div>
+    </div>
+
+    <!-- Bottom Left: Controls Legend -->
+    <div id="controls-panel">
+      <div class="control-key"><span>WASD</span> Move</div>
+      <div class="control-key"><span>SHIFT</span> Sprint</div>
+      <div class="control-key"><span>C</span> Crouch</div>
+      <div class="control-key"><span>F</span> Flashlight</div>
+      <div class="control-key"><span>E</span> Interact</div>
+      <div class="control-key"><span>M</span> Floor Map</div>
+      <div class="control-key"><span>N</span> Free Camera</div>
+    </div>
+
+    <!-- Bottom Right: Flashlight Indicator & Quick Actions -->
+    <div id="status-panel">
+      <div class="flashlight-gauge">
+        <div class="gauge-header">
+          <span class="gauge-title">LANTERN / FLASHLIGHT</span>
+          <span id="flashlight-status" class="status-on">ACTIVE [F]</span>
+        </div>
+        <div class="battery-bar">
+          <div id="battery-fill" class="battery-fill" style="width: 88%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Hospital Map Modal [M] -->
+  <div id="map-modal" class="modal-overlay hidden">
+    <div class="blueprint-window">
+      <div class="blueprint-header">
+        <h2>HOSPITAL EMERGENCY EVACUATION BLUEPRINT</h2>
+        <div class="floor-selector">
+          <button class="floor-btn active" data-floor="0">GROUND FLOOR</button>
+          <button class="floor-btn" data-floor="1">1ST FLOOR (OR / ICU)</button>
+          <button class="floor-btn" data-floor="-1">BASEMENT (MORGUE)</button>
+        </div>
+        <button id="close-map-btn" class="close-btn">&times;</button>
+      </div>
+      <div class="blueprint-canvas-wrapper">
+        <canvas id="blueprint-canvas" width="800" height="600"></canvas>
+      </div>
+      <div class="blueprint-footer">
+        <span class="legend-item"><span class="legend-dot player-dot"></span> YOU ARE HERE</span>
+        <span class="legend-item"><span class="legend-dot emergency-dot"></span> DEFIBRILLATOR / ER</span>
+        <span class="legend-item"><span class="legend-dot stairs-dot"></span> STAIRWELL & ELEVATOR</span>
+        <span class="legend-item"><span class="legend-dot generator-dot"></span> BACKUP GENERATOR</span>
+        <span class="legend-hint">Press [M] or [ESC] to return</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Start Screen / Audio Unlock Screen -->
+  <div id="start-screen">
+    <div class="start-backdrop"></div>
+    <div class="start-card">
+      <div class="hospital-seal">&#9764;</div>
+      <h1 class="title">ST. JUDE MEMORIAL</h1>
+      <h2 class="subtitle">ABANDONED COUNTY HOSPITAL - 1986</h2>
+      <div class="divider"></div>
+      <p class="description">
+        You are investigating the condemned medical facility. 
+        Power has been disconnected for decades. Water leaks echo through the empty corridors,
+        flickering emergency circuits buzz in the darkness, and the morgue awaits in the basement below.
+      </p>
+
+      <div class="feature-tags">
+        <span class="tag">3 Interconnected Floors</span>
+        <span class="tag">Operating Theaters & ICU</span>
+        <span class="tag">Morgue & Autopsy Suite</span>
+        <span class="tag">Procedural Horror Audio</span>
+        <span class="tag">Dynamic Volumetric Fog</span>
+        <span class="tag">Interactive Power Grid</span>
+      </div>
+
+      <div class="audio-notice">
+        <span>&#127911;</span> Headphones recommended for spatial horror audio immersion
+      </div>
+
+      <button id="enter-btn" type="button" class="enter-button">
+        <span class="btn-glow"></span>
+        <span class="btn-text">ENTER HOSPITAL [ENTER ↵]</span>
+      </button>
+
+      <div class="instructions-preview">
+        <span>Press [ENTER ↵] or Click anywhere to start &bull; WASD to explore &bull; [F] Flashlight &bull; [E] Interact &bull; [M] Map</span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
