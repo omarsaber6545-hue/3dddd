@@ -53,24 +53,27 @@ A highly detailed, game-ready **3D abandoned hospital environment** for a psycho
 
 ## 🚀 Quick Start
 
+### 0. Standalone Windows Executable (.exe)
+You can directly run **`Hospital3D.exe`** with a single double-click! It launches the 3D game in a clean, standalone desktop application window with full GPU hardware acceleration and no browser address bar.
+
 ### 1. Clone the repository
 ```bash
 git clone https://github.com/omarsaber6545-hue/3dddd.git
 cd 3dddd
 ```
 
-### 2. Install dependencies
+### 2. Run directly with Hospital3D.exe
+Simply double-click `Hospital3D.exe` in the project folder.
+
+### 3. Run development server (optional)
 ```bash
 npm install
-```
-
-### 3. Run development server
-```bash
 npm run dev
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 4. Build for production
+### 4. Build for production / Recompile .exe
 ```bash
 npm run build
+npm run build:exe
 ```

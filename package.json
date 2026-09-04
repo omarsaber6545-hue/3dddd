@@ -6,12 +6,15 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:exe": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\csc.exe /target:winexe /optimize+ /out:Hospital3D.exe launcher\\Program.cs",
     "preview": "vite preview"
   },
   "dependencies": {
     "three": "^0.174.0"
   },
   "devDependencies": {
+    "electron": "^44.1.1",
+    "electron-builder": "^26.15.3",
     "vite": "^6.2.0"
   }
 }
